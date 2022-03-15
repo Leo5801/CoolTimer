@@ -6,6 +6,8 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.textView);
 
         seekBar.setMax(600);
-        seekBar.setProgress(60);
+        seekBar.setProgress(30);
         isTimerOn = false;
         button = findViewById(R.id.button);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -56,30 +58,28 @@ public class MainActivity extends AppCompatActivity {
             button.setText("Stop");
             seekBar.setEnabled(false);
             isTimerOn = true;
-        } else {
-            countDownTimer.cancel();
-            textView.setText("00:60");
-            button.setText("Start");
-            seekBar.setEnabled(true);
-            seekBar.setProgress(60);
-            isTimerOn = false;
-        }
 
             countDownTimer = new CountDownTimer(seekBar.getProgress() * 1000,1000) {
-            @Override
-            public void onTick(long l) {
+                @Override
+                public void onTick(long l) {
 
-                updateTimer(l);
+                    updateTimer(l);
 
-            }
+                }
 
-            @Override
-            public void onFinish() {
-                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.bell1);
-                mediaPlayer.start();
-            }
-        };
-        countDownTimer.start();
+                @Override
+                public void onFinish() {
+                    MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.bell1);
+                    mediaPlayer.start();
+                    resetTimer();
+                }
+            };
+            countDownTimer.start();
+        } else {
+            resetTimer();
+        }
+
+
     }
     private void updateTimer(long l) {
         int minutes = (int) l/1000/60;
@@ -102,5 +102,22 @@ public class MainActivity extends AppCompatActivity {
         textView.setText(minutesString + ":" + secondsString);
         // ne gap
         // ne gap 2
+    }
+
+    private void resetTimer(){
+        countDownTimer.cancel();
+        textView.setText("00:30");
+        button.setText("Start");
+        seekBar.setEnabled(true);
+        seekBar.setProgress(30);
+        isTimerOn = false;
+    }
+    //github
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.timer_menu, menu);
+        return true;
     }
 }

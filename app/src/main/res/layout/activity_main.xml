@@ -31,7 +31,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:60"
+            android:text="00:30"
             android:textSize="80dp"
             android:textColor="@color/black"
             android:layout_marginStart="100dp"
@@ -39,19 +39,17 @@
             >
         </TextView>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button"
-            android:onClick="start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="start"
-            android:textSize="50dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@id/textView"
-            android:layout_marginStart="127dp"
-            android:background="#046454"
-            android:textColor="@color/white">
-        </androidx.appcompat.widget.AppCompatButton>
+      <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/button"
+          android:onClick="start"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="start"
+          android:background="#046454"
+          android:textColor="@color/white"
+          android:layout_marginStart="160dp"
+          android:layout_marginTop="250dp">
+      </androidx.appcompat.widget.AppCompatButton>
 
 
 
