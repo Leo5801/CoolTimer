@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
             case R.id.action_settings:
+                //axaxaxaxaxa
                 break;
         }
 
