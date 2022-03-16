@@ -5,21 +5,17 @@
         android:id="@+id/action_settings"
         android:title="Settings"
         android:orderInCategory="100"
-        app:showAsAction="never">
+        app:showAsAction="never"
+        android:icon="@drawable/ic_baseline_settings_24">
 
     </item>
     <item
         android:id="@+id/action_about"
         android:title="About"
         android:orderInCategory="110"
-        app:showAsAction="never">
+        app:showAsAction="never"
+        android:icon="@drawable/ic_baseline_question_answer_24">
 
     </item>
-    <item
-        android:id="@+id/action_purchase"
-        android:title="Purchase"
-        android:orderInCategory="55"
-        app:showAsAction="never">
 
-    </item>
 </menu>

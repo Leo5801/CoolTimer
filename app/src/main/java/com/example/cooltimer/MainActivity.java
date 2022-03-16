@@ -3,6 +3,7 @@ package com.example.cooltimer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -124,18 +125,23 @@ public class MainActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.timer_menu, menu);
 
         return super.onCreateOptionsMenu(menu);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
 
-        switch (item.getItemId()){
-            case R.id.action_settings:
-                //axaxaxaxaxa
-                break;
+        if (id == R.id.action_settings) {
+            Intent openSettings = new Intent(this,SettingsActivity.class);
+            startActivity(openSettings);
+            return true;
+        } else if (id == R.id.action_about) {
+            Intent openAbout = new Intent(this,AboutActivity.class);
+            startActivity(openAbout);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
+        // yena coment :)
     }
 }
