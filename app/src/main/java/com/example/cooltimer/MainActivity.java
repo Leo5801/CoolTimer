@@ -2,8 +2,10 @@ package com.example.cooltimer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -15,14 +17,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private SeekBar seekBar;
     private TextView textView;
     private boolean isTimerOn;
     private Button button;
     private CountDownTimer countDownTimer;
+    private int defaultInterval;
+    SharedPreferences sharedPreferences;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,10 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
         seekBar = findViewById(R.id.seekBar);
         textView = findViewById(R.id.textView);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         seekBar.setMax(600);
-        seekBar.setProgress(30);
         isTimerOn = false;
+        setIntervalFromSharedPrefernces(sharedPreferences);
+
         button = findViewById(R.id.button);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -52,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
     }
 
@@ -72,9 +83,31 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinish() {
-                    MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.bell1);
-                    mediaPlayer.start();
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+                    String melodyName = sharedPreferences.getString("timer_melody","bell");
+                    if (melodyName.equals("bell")) {
+                        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.bell1);
+                        mediaPlayer.start();
+                    } else if (melodyName.equals("alarm_siren")) {
+                        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.alarm_siren);
+                        mediaPlayer.start();
+                    }else if (melodyName.equals("bip")) {
+                        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.bip);
+                        mediaPlayer.start();
+                    }
+
+
+
+
+
+                    if (sharedPreferences.getBoolean("enable_sound",true)){
+                        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.bell1);
+                        mediaPlayer.start();
+
+                    }
                     resetTimer();
+
                 }
             };
             countDownTimer.start();
@@ -109,11 +142,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void resetTimer(){
         countDownTimer.cancel();
-        textView.setText("00:30");
         button.setText("Start");
         seekBar.setEnabled(true);
-        seekBar.setProgress(30);
         isTimerOn = false;
+        setIntervalFromSharedPrefernces(sharedPreferences);
     }
     //github
     //sds
@@ -144,4 +176,34 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
         // yena coment :)
     }
+
+    private void setIntervalFromSharedPrefernces (SharedPreferences sharedPreferences) {
+        try {
+            defaultInterval = Integer.valueOf(sharedPreferences.getString("default_interval","30)"));
+
+        } catch (NumberFormatException numberFormatException) {
+            Toast.makeText(this, "Blaaa Son yoz axr", Toast.LENGTH_LONG).show();
+        }catch ( Exception exception) {
+            Toast.makeText(this, "Some error happens", Toast.LENGTH_LONG).show();
+        }
+
+
+        long defaultIntervalInMillis = defaultInterval * 1000;
+        updateTimer(defaultIntervalInMillis);
+        seekBar.setProgress(defaultInterval);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+         if (s.equals("default_interval")){
+                setIntervalFromSharedPrefernces(sharedPreferences);
+         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+    // pitdi axr
 }
